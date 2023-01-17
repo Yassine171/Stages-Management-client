@@ -10,6 +10,11 @@ import Missing from './components/Missing';
 // import LinkPage from './components/LinkPage';
 // import RequireAuth from './components/RequireAuth';
 import { Routes, Route } from 'react-router-dom';
+import Espaces from './components/Espaces';
+import Register_enseignat from './components/Register_enseignat';
+import Register_etudiant from './components/Register_etudiant';
+import Register_entreprise from './components/Register_entreprise';
+import Login from './components/Login';
 
 // const ROLES = {
 //   'User': 2001,
@@ -24,6 +29,11 @@ function App() {
       <Route path="/" element={<Layout />}>
         {/* public routes */}
         {/* <Route path="login" element={<Login />} /> */}
+        <Route path="/espaces" element={<Espaces />}/>
+        <Route path="/register_enseignat" element={<Register_enseignat />}/>
+        <Route path="/register_etudiant" element={<Register_etudiant />}/>
+        <Route path="/register_entreprise" element={<Register_entreprise />}/>
+        <Route path="/login" element={<Login />}/>
         <Route path="etudiant" element={<Etudiant />} />
         {/* <Route path="linkpage" element={<LinkPage />} />
         <Route path="unauthorized" element={<Unauthorized />} /> */}
