@@ -73,7 +73,7 @@ const Register_etudiant = () => {
         </label>
         <input
           className="border border-gray-400 p-2 rounded-lg w-full"
-          type="text"
+          type="file"
           id="cv"
           name="cv"
           value={formData.cv}

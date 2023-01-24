@@ -1,12 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 const Etudiant = () => {
-  const [data, setData] = useState([]);
+  const [etudiants, setEtudiants] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   useEffect(() => {
-    axios.get('https://127.0.0.1:8000/api/etudiants')
-      .then(res => setData(res.data['hydra:member']))
-      .catch(err => console.log(err));
+    let isMounted = true;
+    const controller = new AbortController();
+
+       const getUsers = async () => {
+            try {
+                const response = await axiosPrivate.get('/api/etudiants/', {
+                    signal: controller.signal
+                });
+                console.log(response);
+                isMounted && setEtudiants(response.data);
+            } catch (err) {
+                console.error(err);
+                Navigate('/login', { state: { from: location }, replace: true });
+            }
+        }
+
+        getUsers();
+
+        return () => {
+            isMounted = false;
+            controller.abort();
+        }
   }, []);
 
   return (
@@ -17,13 +41,13 @@ const Etudiant = () => {
             <thead>
               <tr className="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
                 <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Age</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Date</th>
+                <th className="px-4 py-3">Filiere</th>
+                <th className="px-4 py-3">Niveau Scolaire</th>
+                <th className="px-4 py-3">CV</th>
               </tr>
             </thead>
             <tbody className="bg-white">
-            {data.map((etudiant, index) => (
+            {etudiants.map((etudiant, index) => (
               <tr key={index} className="text-gray-700">
                 <td className="px-4 py-3 border">
                   <div className="flex items-center text-sm">
@@ -33,15 +57,17 @@ const Etudiant = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-black">{etudiant.name}</p>
-                      <p className="text-xs text-gray-600">{etudiant.cv}</p>
+                      <p className="text-xs text-gray-600">{etudiant.email}</p>
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-ms font-semibold border">{etudiant.name}</td>
+                <td className="px-4 py-3 text-ms font-semibold border">{etudiant.filiere.name}</td>
+                <td className="px-4 py-3 text-sm border">{etudiant.nv_scolaire}</td>
                 <td className="px-4 py-3 text-xs border">
-                  <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm"> Acceptable </span>
+                  <a  className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm" href={etudiant.cv_name}>
+                     Download
+               </a>
                 </td>
-                <td className="px-4 py-3 text-sm border">{etudiant.name}</td>
               </tr>
                   ))}
             </tbody>
