@@ -1,16 +1,50 @@
-import React, { useState } from 'react';
+import jwtDecode from 'jwt-decode';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 function ProfileProf() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [modules, setModules] = useState([]);
+  const token = localStorage.getItem('token'); // assuming you have the token stored in localStorage
+  const decoded = jwtDecode(token);
+  console.log(decoded);
+
+  const [prof, setProf] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getUsers = async () => {
+      try {
+        const response = await axiosPrivate.get(`/api/profs/${decoded.username}`, {
+          signal: controller.signal
+        });
+        console.log(response);
+        isMounted && setProf({...response.data, password: ""});
+            } catch (err) {
+        console.error(err);
+        navigate('/login', { state: { from: location }, replace: true });
+      }
+    };
+
+    getUsers();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(name, email, password, modules);
     // Code to handle form submission and update user's profile
-  }
+    console.log(prof);
+  };
+
+
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg">
@@ -18,8 +52,8 @@ function ProfileProf() {
         Name:
         <input 
           type="text" 
-          value={name} 
-          onChange={(e) => setName(e.target.value)} 
+          value={prof.name} 
+          onChange={e => setProf(prev => ({ ...prev, name: e.target.value }))}
           className="form-input mt-1 block w-full" 
         />
       </label>
@@ -27,8 +61,8 @@ function ProfileProf() {
         Email:
         <input 
           type="email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
+          value={prof.email} 
+          onChange={e => setProf(prev => ({ ...prev, email: e.target.value }))}
           className="form-input mt-1 block w-full" 
         />
       </label>
@@ -36,8 +70,8 @@ function ProfileProf() {
         Password:
         <input 
           type="password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
+          value={prof.password} 
+          onChange={e => setProf(prev => ({ ...prev, password: e.target.value }))}
           className="form-input mt-1 block w-full" 
         />
       </label>
@@ -45,8 +79,8 @@ function ProfileProf() {
         Modules:
         <select
           multiple
-          value={modules}
-          onChange={(e) => setModules(e.target.options)}
+          value={prof.modules} 
+          onChange={e => setProf(prev => ({ ...prev, modules: e.target.value }))}
           className="form-select mt-1 block w-full"
         >
           <option value="Module 1">Module 1</option>

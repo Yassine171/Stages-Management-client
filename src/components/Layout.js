@@ -33,7 +33,7 @@ const Layout = () => {
                     <img className="block h-8 w-auto lg:hidden" src="https://ensa.uit.ac.ma/wp-content/uploads/2019/11/cropped-ensak-logo.png" alt="Your Company"></img>
                     <img className="hidden h-8 w-auto lg:block" src="https://ensa.uit.ac.ma/wp-content/uploads/2019/11/cropped-ensak-logo.png" alt="Your Company"></img>
                     </div>
-                    {location.pathname !== '/login' && location.pathname !== '/register_etudiant' && location.pathname !== '/register_enseignat' && location.pathname !== '/register_entreprise' && (
+                    {location.pathname !== '/login' && location.pathname !== '/register_etudiant' && location.pathname !== '/register_enseignat' && location.pathname !== '/register_entreprise' &&location.pathname !== '/espaces' && location.pathname !== '/' && (
                     <div>
                     <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">               
@@ -51,7 +51,7 @@ const Layout = () => {
           )}
               
                 </div>
-                {location.pathname !== '/login' && location.pathname !== '/register_etudiant' && location.pathname !== '/register_enseignat' && location.pathname !== '/register_entreprise' && (
+                {location.pathname !== '/login' && location.pathname !== '/register_etudiant' && location.pathname !== '/register_enseignat' && location.pathname !== '/register_entreprise' && location.pathname !== '/espaces' && location.pathname !== '/' && (
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                     <button type="button" className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                     <span className="sr-only">View notifications</span>
